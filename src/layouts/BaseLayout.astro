@@ -2,9 +2,12 @@
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogImage } = Astro.props;
+const canonicalURL = Astro.url.href;
+const ogImageURL = ogImage ? new URL(ogImage, Astro.site).href : new URL('/images/gacha-world.webp', Astro.site).href;
 const currentYear = new Date().getFullYear();
 ---
 
@@ -15,8 +18,18 @@ const currentYear = new Date().getFullYear();
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   {description && <meta name="description" content={description} />}
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="canonical" href={Astro.url.href} />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="canonical" href={canonicalURL} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  {description && <meta property="og:description" content={description} />}
+  <meta property="og:image" content={ogImageURL} />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  {description && <meta name="twitter:description" content={description} />}
+  <meta name="twitter:image" content={ogImageURL} />
 </head>
 <body>
   <header class="site-header" id="masthead">
