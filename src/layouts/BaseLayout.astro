@@ -23,7 +23,7 @@ const currentYear = new Date().getFullYear();
     <div class="inside-header grid-container">
       <div class="site-logo">
         <a href="/">
-          <img class="header-image is-logo-image" alt="Gacha World" src="/images/cropped-gacha-world.png" width="350" height="70" />
+          <img class="header-image is-logo-image" alt="Gacha World" src="/images/cropped-gacha-world.webp" width="350" height="70" fetchpriority="high" />
         </a>
       </div>
       <nav class="main-navigation" id="site-navigation">
@@ -107,6 +107,25 @@ const currentYear = new Date().getFullYear();
         }
       });
     });
+
+    // YouTube Lite Facade - load iframe only on interaction
+    document.querySelectorAll('.youtube-facade').forEach(facade => {
+      facade.addEventListener('click', () => {
+        const videoId = facade.dataset.videoId;
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        iframe.title = 'YouTube video player';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.border = 'none';
+        facade.replaceWith(iframe);
+      });
+    });
   </script>
 </body>
 </html>
@@ -132,7 +151,7 @@ const currentYear = new Date().getFullYear();
     padding: 0;
     background-color: var(--base-3);
     color: var(--contrast);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
     line-height: 1.5;
   }
@@ -191,6 +210,8 @@ const currentYear = new Date().getFullYear();
 
   .header-image {
     display: block;
+    width: 350px;
+    height: 70px;
   }
 
   /* === NAVIGATION === */
@@ -507,6 +528,57 @@ const currentYear = new Date().getFullYear();
     color: #ffffff;
   }
 
+  /* === YOUTUBE LITE FACADE === */
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background-color: #000;
+  }
+
+  .youtube-facade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background-color: #000;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .youtube-facade .yt-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 48px;
+    pointer-events: none;
+  }
+
+  .youtube-facade .yt-play-btn svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .youtube-facade:hover .yt-play-btn svg .yt-bg {
+    fill: #f00;
+  }
+
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   /* === RESPONSIVE === */
   @media (max-width: 768px) {
     .inside-article {
@@ -548,22 +620,10 @@ const currentYear = new Date().getFullYear();
       padding-left: 15px;
       padding-right: 15px;
     }
-  }
 
-  /* === YOUTUBE EMBED === */
-  .video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-  }
-
-  .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    .header-image {
+      max-width: 250px;
+      height: auto;
+    }
   }
 </style>
